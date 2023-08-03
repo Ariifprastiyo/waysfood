@@ -5,14 +5,10 @@ import (
 	usersdto "WaysFood/dto/users"
 	"WaysFood/models"
 	"WaysFood/repositories"
-	"context"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 
-	"github.com/cloudinary/cloudinary-go/v2"
-	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -115,24 +111,11 @@ func (h *handler) UpdateUser(c echo.Context) error {
 	dataFile := c.Get("dataFile").(string)
 	fmt.Println("This is data file", dataFile)
 
-	var ctx = context.Background()
-	var CLOUD_NAME = os.Getenv("CLOUD_NAME")
-	var API_KEY = os.Getenv("API_KEY")
-	var API_SECRET = os.Getenv("API_SECRET")
-
-	cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
-
-	// Upload file to Cloudinary ...
-	resp, err := cld.Upload.Upload(ctx, dataFile, uploader.UploadParams{Folder: "WaysFood"})
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
 	request := usersdto.UpdateUserRequest{
 		FullName: c.FormValue("fullname"),
 		Email:    c.FormValue("email"),
 		Phone:    c.FormValue("phone"),
-		Image:    resp.SecureURL,
+		Image:    dataFile,
 		Location: c.FormValue("location"),
 	}
 
