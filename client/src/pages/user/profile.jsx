@@ -1,6 +1,5 @@
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
-import Header from "../../components/header";
-import Maps from "../../assets/img/map.png";
+import Mapss from "../../assets/img/map.png";
 
 import { useMutation, useQuery } from "react-query";
 import { API, setAuthToken } from "../../config/api";
@@ -149,7 +148,7 @@ function Profile() {
             <Form.Group as={Col} controlId="formGridPassword">
               <Button variant="dark" type="submit" className="w-100" disabled>
                 Select On Map{" "}
-                <img src={Maps} className="align-top" alt="Brand" />
+                <img src={Mapss} className="align-top" alt="Brand" />
               </Button>
             </Form.Group>
           </Row>
