@@ -1,7 +1,7 @@
 import { Container, Stack, Row, Col, Button } from "react-bootstrap";
 import Header from "../../components/header";
 import Avatar from "../../assets/img/avatar.png";
-import Icon from "../../assets/img/icon.png";
+import Icon from "../../assets/img/Icon.png";
 
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
