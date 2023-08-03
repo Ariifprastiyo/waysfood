@@ -5,6 +5,7 @@ import (
 	"WaysFood/pkg/mysql"
 	"WaysFood/routes"
 	"fmt"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -32,6 +33,8 @@ func main() {
 
 	e.Static("/uploads", "./uploads")
 
+	var PORT = os.Getenv("PORT")
+
 	fmt.Println("Server running localhost:5000")
-	e.Logger.Fatal(e.Start(":5000"))
+	e.Logger.Fatal(e.Start(":" + PORT))
 }

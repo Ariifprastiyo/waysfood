@@ -3,12 +3,13 @@ import Header from "../../components/header";
 import Maps from "../../assets/img/map.png";
 
 import { useMutation, useQuery } from "react-query";
-import { API } from "../../config/api";
+import { API, setAuthToken } from "../../config/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
   let navigate = useNavigate();
+  setAuthToken(localStorage.token);
 
   const [isLoading, setIsLoading] = useState(true);
   const [preview, setPreview] = useState(null);
@@ -72,17 +73,18 @@ function Profile() {
 
       const response = await API.patch("/user", formData, config);
 
+      alert("Update User Success");
       navigate("/myprofile");
     } catch (error) {
       console.log("ini error update :", error);
+      alert("Update User Failed");
     }
   });
-
 
   return (
     <div>
       <Container>
-        <h2 className="mt-5">Edit Profile</h2>
+        <h2 className="mt-5 fw-bold">Edit Profile</h2>
         <Form className="my-5" onSubmit={(e) => handleSubmit.mutate(e)}>
           <Row className="mb-3">
             <Form.Group as={Col} md={10}>
@@ -114,11 +116,23 @@ function Profile() {
           </Row>
 
           <Form.Group className="mb-3">
-            <Form.Control type="email" value={form?.email} onChange={handleChange} name="email" placeholder="Email" />
+            <Form.Control
+              type="email"
+              value={form?.email}
+              onChange={handleChange}
+              name="email"
+              placeholder="Email"
+            />
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Control type="number" value={form?.phone} onChange={handleChange} name="phone" placeholder="Phone" />
+            <Form.Control
+              type="number"
+              value={form?.phone}
+              onChange={handleChange}
+              name="phone"
+              placeholder="Phone"
+            />
           </Form.Group>
 
           <Row className="mb-5">
@@ -133,7 +147,7 @@ function Profile() {
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridPassword">
-              <Button variant="dark" type="submit" className="w-100">
+              <Button variant="dark" type="submit" className="w-100" disabled>
                 Select On Map{" "}
                 <img src={Maps} className="align-top" alt="Brand" />
               </Button>

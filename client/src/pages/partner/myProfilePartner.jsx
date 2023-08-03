@@ -7,10 +7,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { API } from "../../config/api";
 
-
 function MyProfilePartner() {
-
-
   let { data: profile } = useQuery("profileCache", async () => {
     const response = await API.get("/profile");
     console.log("ini respon profile", response);
@@ -22,10 +19,10 @@ function MyProfilePartner() {
       <Container>
         <Row className="mt-5">
           <Col>
-            <h2>Profile Partner</h2>
+            <h2 className="fw-bold">Profile Partner</h2>
           </Col>
         </Row>
-        <Stack direction="horizontal" gap={3} className="border mt-3">
+        <Stack direction="horizontal" gap={3} className="mt-3">
           <div className="p-2">
             <img
               src={profile?.image}
@@ -40,22 +37,22 @@ function MyProfilePartner() {
               </Link>
             </div>
           </div>
-          <div className="p-2 border">
+          <div className="p-2" style={{ marginTop: "-110px" }}>
             <Row>
               <Col>
-                <h5>Full Name</h5>
+                <h4 className="fw-bold">Full Name</h4>
                 <p>{profile?.fullname}</p>
               </Col>
             </Row>
             <Row>
               <Col>
-                <h5>Email</h5>
+                <h4 className="fw-bold">Email</h4>
                 <p>{profile?.email}</p>
               </Col>
             </Row>
             <Row>
               <Col>
-                <h5>Phone</h5>
+                <h4 className="fw-bold">Phone</h4>
                 <p>{profile?.phone}</p>
               </Col>
             </Row>

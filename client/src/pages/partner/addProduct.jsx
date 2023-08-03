@@ -48,15 +48,17 @@ function AddProduct() {
       console.log("Add Product Partner success :", response);
 
       navigate("/addproduct");
+      alert("Add Product Success");
     } catch (error) {
       console.log("Add Product failed :", error);
+      alert("Add Product Failed");
     }
   });
 
   return (
     <div>
       <Container>
-        <h2 className="mt-5">Add Product</h2>
+        <h2 className="mt-5 fw-bold">Add Product</h2>
         <Form className="my-5" onSubmit={(e) => handleSubmit.mutate(e)}>
           <Row className="mb-3">
             <Form.Group as={Col} md={10}>

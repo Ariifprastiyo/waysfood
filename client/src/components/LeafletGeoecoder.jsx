@@ -1,8 +1,7 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
-
-const LeafletGeoecoder = () => {
+const LeafletGeocoder = () => {
   const map = useMap();
   useEffect(() => {
     L.Control.geocoder({
@@ -18,4 +17,4 @@ const LeafletGeoecoder = () => {
   return null;
 };
 
-export default LeafletGeoecoder;
+export default LeafletGeocoder;

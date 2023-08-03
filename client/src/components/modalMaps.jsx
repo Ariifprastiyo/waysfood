@@ -27,7 +27,7 @@ function ModalMaps({show, showMaps}) {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {/* <LeafletGeoecoder /> */}
-            <LeafletRoutingMachine />
+            <LeafletRoutingMachine  />
           </MapContainer>
         {/* </div> */}
       </Modal.Body>

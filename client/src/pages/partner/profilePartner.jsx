@@ -55,11 +55,6 @@ function ProfilePartner() {
     try {
       e.preventDefault();
 
-      const config = {
-        headers: {
-          "Content-type": "multipart/form-data",
-        },
-      };
 
       const formData = new FormData();
       if (form.image) {
@@ -70,15 +65,17 @@ function ProfilePartner() {
       formData.set("phone", form.phone);
       formData.set("location", form.location);
 
-      const response = await API.patch("/user", formData, config);
+      const response = await API.patch("/user", formData);
 
       navigate("/myprofilepartner");
+      alert("Update Profile Partner Success");
     } catch (error) {
-      console.log( "ini error update :", error);
+      console.log("ini error update :", error);
+      alert("Update Profile Partner Failed");
     }
   });
 
-  return (  
+  return (
     <div>
       <Container>
         <h2 className="mt-5">Edit Profile Partner</h2>
@@ -144,7 +141,7 @@ function ProfilePartner() {
             </Form.Group>
 
             <Form.Group as={Col}>
-              <Button variant="dark" className="w-100">
+              <Button variant="dark" className="w-100" disabled>
                 Select On Map{" "}
                 <img src={Maps} className="align-top" alt="Brand" />
               </Button>

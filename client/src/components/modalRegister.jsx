@@ -4,50 +4,53 @@ import { useMutation } from "react-query";
 import { API } from "../config/api";
 import { useState } from "react";
 
-function ModalRegister({show, showRegister, showLogin}) {
-    const handleClose = () => showRegister(false);
-    const changeModal = () => {
-        handleClose()
-        showLogin(true)
-    }
+function ModalRegister({ show, showRegister, showLogin }) {
+  const handleClose = () => showRegister(false);
+  const changeModal = () => {
+    handleClose();
+    showLogin(true);
+  };
 
-    const [form, setForm] = useState({
-      email: '',
-      password: '',
-      fullname: '',
-      gender: '',
-      phone: '',
-      role: '',
-    })
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    fullname: "",
+    gender: "",
+    phone: "",
+    role: "",
+  });
 
-    const { email, password, fullname, gender, phone, role } = form;
+  const { email, password, fullname, gender, phone, role } = form;
 
-    const handleChange = (e) => {
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = useMutation(async (e) => {
+    try {
+      e.preventDefault();
+
+      const response = await API.post("/register", form);
+      console.log("register success", response);
+
       setForm({
-        ...form,
-        [e.target.name]: e.target.value
-      })
+        email: "",
+        password: "",
+        fullname: "",
+        gender: "",
+        phone: "",
+        role: "",
+      });
+
+      alert("Register Success");
+    } catch (error) {
+      console.log("register failed", error);
+      alert("Register Failed");
     }
-
-    const handleSubmit = useMutation(async (e) => {
-      try {
-        e.preventDefault();
-
-        const response = await API.post('/register', form);
-        console.log("register success", response)
-
-        setForm({
-          email: '',
-          password: '',
-          fullname: '',
-          gender: '',
-          phone: '',
-          role: '',
-        })
-      } catch (error) {
-        console.log("register failed", error)
-      }
-    })
+  });
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -55,7 +58,13 @@ function ModalRegister({show, showRegister, showLogin}) {
         <Form onSubmit={(e) => handleSubmit.mutate(e)}>
           <h2 className="text-warning my-4">Register</h2>
           <Form.Group className="mb-3">
-            <Form.Control type="email" value={email} onChange={handleChange} name="email" placeholder="Email" />
+            <Form.Control
+              type="email"
+              value={email}
+              onChange={handleChange}
+              name="email"
+              placeholder="Email"
+            />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Control
@@ -67,13 +76,31 @@ function ModalRegister({show, showRegister, showLogin}) {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Control type="text" value={fullname} onChange={handleChange} name="fullname" placeholder="Full Name" />
+            <Form.Control
+              type="text"
+              value={fullname}
+              onChange={handleChange}
+              name="fullname"
+              placeholder="Full Name"
+            />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Control type="text" value={gender} onChange={handleChange} name="gender" placeholder="Gender" />
+            <Form.Control
+              type="text"
+              value={gender}
+              onChange={handleChange}
+              name="gender"
+              placeholder="Gender"
+            />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Control type="number" value={phone} onChange={handleChange} name="phone" placeholder="Phone" />
+            <Form.Control
+              type="number"
+              value={phone}
+              onChange={handleChange}
+              name="phone"
+              placeholder="Phone"
+            />
           </Form.Group>
           <Form.Group className="mb-4">
             <Form.Select name="role" value={role} onChange={handleChange}>
@@ -82,12 +109,19 @@ function ModalRegister({show, showRegister, showLogin}) {
               <option value="partner">As Partner</option>
             </Form.Select>
           </Form.Group>
-          <Button variant="dark" type="submit" className="w-100 mb-3" onClick={handleClose}>
+          <Button
+            variant="dark"
+            type="submit"
+            className="w-100 mb-3"
+            onClick={handleClose}
+          >
             Register
           </Button>
           <p className="text-center">
             Already have an account ? Klik{" "}
-            <b style={{ cursor: "pointer" }} onClick={changeModal}>Here</b>
+            <b style={{ cursor: "pointer" }} onClick={changeModal}>
+              Here
+            </b>
           </p>
         </Form>
       </Modal.Body>

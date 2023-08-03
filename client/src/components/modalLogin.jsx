@@ -6,14 +6,13 @@ import { useMutation } from "react-query";
 import { API, setAuthToken } from "../config/api";
 
 function ModalLogin({ show, showLogin, showRegister }) {
-
   setAuthToken(localStorage.token);
 
   const handleClose = () => showLogin(false);
   const changeModal = () => {
-    handleClose()
-    showRegister(true)
-  }
+    handleClose();
+    showRegister(true);
+  };
 
   let navigate = useNavigate();
 
@@ -46,21 +45,21 @@ function ModalLogin({ show, showLogin, showRegister }) {
         payload: response.data.data,
       });
 
-      setAuthToken(localStorage.token);
-
       if (response.data.data.role === "partner") {
         navigate("/income");
       } else {
         navigate("/");
       }
 
-      setForm ({
+      setForm({
         email: "",
         password: "",
-      })
-      
+      });
+
+      alert("Login Success")
     } catch (error) {
       console.log("login failed : ", error);
+      alert("Login Failed")
     }
   });
 
@@ -70,7 +69,13 @@ function ModalLogin({ show, showLogin, showRegister }) {
         <Form onSubmit={(e) => handleSubmit.mutate(e)}>
           <h2 className="text-warning my-4">Login</h2>
           <Form.Group className="mb-3">
-            <Form.Control type="email" value={email} onChange={handleChange} name="email" placeholder="Email" />
+            <Form.Control
+              type="email"
+              value={email}
+              onChange={handleChange}
+              name="email"
+              placeholder="Email"
+            />
           </Form.Group>
           <Form.Group className="mb-4">
             <Form.Control
@@ -81,12 +86,19 @@ function ModalLogin({ show, showLogin, showRegister }) {
               placeholder="Password"
             />
           </Form.Group>
-          <Button variant="dark" type="submit" className="w-100 mb-3" onClick={handleClose}>
+          <Button
+            variant="dark"
+            type="submit"
+            className="w-100 mb-3"
+            onClick={handleClose}
+          >
             Login
           </Button>
           <p className="text-center">
             Don't have an account ? Klik{" "}
-            <b style={{ cursor: "pointer" }} onClick={changeModal}>Here</b>
+            <b style={{ cursor: "pointer" }} onClick={changeModal}>
+              Here
+            </b>
           </p>
         </Form>
       </Modal.Body>

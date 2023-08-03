@@ -52,7 +52,7 @@ func (r *repository) GetPartnerTransaction(PartnerID int) ([]models.Transaction,
 // Get ID Transaction
 func (r *repository) GetTransaction(ID int) (models.Transaction, error) {
 	var transactions models.Transaction
-	err := r.db.Preload("Buyer").First(&transactions, ID).Error
+	err := r.db.Preload("User").First(&transactions, ID).Error
 
 	return transactions, err
 }

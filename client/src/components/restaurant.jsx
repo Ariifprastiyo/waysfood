@@ -28,21 +28,25 @@ function Restaurant() {
   return (
     <div>
       <Container>
-        <h3 className="mt-5">Restaurant Near You</h3>
+        <h3 className="mt-5 fw-bold">Restaurant Near You</h3>
         <Row className="row-cols-4 my-5">
           {partner?.map((data, index) => (
             <Col key={index}>
               <Card
                 className="p-2"
-                style={{ cursor: "pointer", height:"300px" }}
+                style={{ cursor: "pointer", height: "300px" }}
                 onClick={() =>
                   !state.isLogin ? setShowLogin(true) : productPartner(data.id)
                 }
               >
-                <Card.Img variant="top" src={data.image} style={{height:"200px"}} />
+                <Card.Img
+                  variant="top"
+                  src={data.image}
+                  style={{ height: "200px" }}
+                />
                 <Card.Body>
                   <Card.Title>{data.fullname}</Card.Title>
-                  <Card.Text>0,2 KM</Card.Text>
+                  <Card.Text>{data.location}</Card.Text>
                 </Card.Body>
               </Card>
             </Col>

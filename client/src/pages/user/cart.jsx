@@ -101,7 +101,7 @@ function Cart() {
   return (
     <div>
       <Container>
-        <h2>User Order</h2>
+        <h2 className="my-3 fw-bold">User Order</h2>
         <Form>
           <Row className="">
             <p>Delivery Location</p>
@@ -111,6 +111,7 @@ function Cart() {
                 name="location"
                 placeholder="Location"
               />
+              <p className="mt-3">Review Your Order</p>
             </Form.Group>
 
             <Form.Group as={Col}>
@@ -118,6 +119,7 @@ function Cart() {
                 variant="dark"
                 className="w-100"
                 onClick={() => setShowMaps(true)}
+                disabled
               >
                 Select On Map{" "}
                 <img src={Maps} className="align-top" alt="Brand" />
@@ -125,12 +127,12 @@ function Cart() {
             </Form.Group>
           </Row>
         </Form>
-        <Stack direction="horizontal" gap={5}>
+
+        <div className="d-flex justify-content-center">
           <div className="w-75">
-            <p>Review Your Order</p>
             {cart?.map((data, index) => (
               <Row
-                className=" border-top border-bottom border-dark py-3"
+                className=" border-top  border-dark py-3"
                 key={index}
               >
                 <Col md={2} className="">
@@ -142,14 +144,13 @@ function Cart() {
                 </Col>
                 <Col md={8} className="">
                   <p>{data?.product.title}</p>
-                  <p>{data?.qty + 1}</p>
                 </Col>
                 <Col md={2} className="">
                   <p className="text-danger">Rp. {data?.product.price}</p>
                   <img
                     src={Trash}
                     alt="trash"
-                    style={{cursor:"pointer"}}
+                    style={{ cursor: "pointer" }}
                     onClick={() => {
                       handleDelete(data.id);
                     }}
@@ -158,11 +159,9 @@ function Cart() {
               </Row>
             ))}
           </div>
-          <div className="ms-auto w-25">
-            <div
-              className="border-top border-bottom border-dark"
-              style={{ marginTop: "90px" }}
-            >
+
+          <div className="ms-5 w-25">
+            <div className="border-top border-bottom border-dark p-1">
               <Row>
                 <Col>
                   <p>Subtotal</p>
@@ -188,7 +187,7 @@ function Cart() {
                 </Col>
               </Row>
             </div>
-            <Row>
+            <Row className="pt-3">
               <Col>
                 <p className="text-danger">Total</p>
               </Col>
@@ -197,14 +196,15 @@ function Cart() {
               </Col>
             </Row>
           </div>
-        </Stack>
+        </div>
+
         <Button
           variant="dark"
           type=""
           className="w-25 mt-5"
           onClick={(e) => handleBuy.mutate(e)}
         >
-          Save
+          Buy
         </Button>
       </Container>
 

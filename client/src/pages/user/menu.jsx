@@ -12,11 +12,8 @@ function Menu() {
   let navigate = useNavigate();
   let param = useParams();
   let id = parseInt(param.id);
-  console.log("ini use param id", id);
   const [productId, setProductId] = useState();
   const [productUserId, setProductUserId] = useState();
-  console.log("productid", productId);
-  console.log("productuserid", productUserId);
 
   let { data: products } = useQuery(["productsCache", id], async () => {
     const response = await API.get("/products/" + id);
@@ -24,39 +21,30 @@ function Menu() {
     return response.data.data;
   });
 
-  const handleOrder = useMutation(async (e) => {
+  const handleOrder = useMutation(async (formData) => {
     try {
-      e.preventDefault();
-
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-
-      const data = {
-        product_id: productId,
-        partner_id: productUserId,
-      };
-
-      const body = JSON.stringify(data);
-
-      const formdata = new FormData();
-      formdata.set("partner_id", productUserId);
-      formdata.set("product_id", productId);
-      const response = await API.post("/order", formdata);
+      const response = await API.post("/order", formData);
       console.log("beli berhasil ", response);
-      navigate("/");
+      navigate("/product-partner/" + id);
+      alert("Order Success");
     } catch (error) {
       console.log("beli gagal ", error);
-      console.log("ini id ", id);
     }
   });
+
+  const handleOrderClick = (e) => {
+    e.preventDefault();
+    const formdata = new FormData();
+    formdata.set("partner_id", productUserId);
+    formdata.set("product_id", productId);
+
+    handleOrder.mutate(formdata);
+  };
 
   return (
     <div>
       <Container>
-        <h2 className="mt-5">Menus</h2>
+        <h2 className="mt-5 fw-bold">Menus</h2>
         <Row className="row-cols-4 my-5">
           {products?.map((data, index) => (
             <Col key={index}>
@@ -75,9 +63,9 @@ function Menu() {
                     variant="warning"
                     className="text-center w-100"
                     onClick={(e) => {
-                      handleOrder.mutate(e);
                       setProductId(data?.id);
                       setProductUserId(data?.user?.id);
+                      handleOrderClick(e);
                     }}
                   >
                     Order

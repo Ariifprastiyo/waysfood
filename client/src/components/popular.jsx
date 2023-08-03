@@ -9,7 +9,7 @@ function Popular() {
   return (
     <div>
       <Container>
-        <h3 className="my-5">Popular Restaurant</h3>
+        <h3 className="my-5 fw-bold">Popular Restaurant</h3>
         <Row className="my-5">
           <Col>
             <div className="bg-body-secondary rounded p-2">

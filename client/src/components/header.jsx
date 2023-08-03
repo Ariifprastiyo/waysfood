@@ -55,7 +55,7 @@ function Header() {
                         to="/myprofilepartner"
                         style={{ textDecoration: "none" }}
                       >
-                        <Dropdown.Item href="#/action-1">
+                        <Dropdown.Item href="#/action-1" className="">
                           <img src={User} className="" alt="" /> Profile Partner
                         </Dropdown.Item>
                       </Link>

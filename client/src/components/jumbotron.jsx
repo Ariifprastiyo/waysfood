@@ -11,7 +11,7 @@ function Jumbotron() {
             <h1 >Express Home Delivery</h1>
             <Row className="" > 
               <Col md={3}>
-                <hr></hr>
+                <hr className="border border-dark"></hr>
               </Col>
               <Col md={9}>
                 <p>
