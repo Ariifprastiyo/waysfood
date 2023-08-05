@@ -5,10 +5,19 @@ import { useMutation, useQuery } from "react-query";
 import { API, setAuthToken } from "../../config/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ModalMaps from "../../components/modalMaps";
+import axios from "axios";
 
 function Profile() {
-  let navigate = useNavigate();
+  const [showMaps, setShowMaps] = useState(false);
+  const [clickedPosition, setClickedPosition] = useState("");
+  const [location, setLocation] = useState("");
+
+  console.log("postion", clickedPosition);
+  console.log("latitud", clickedPosition.lat);
+
   setAuthToken(localStorage.token);
+  let navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
   const [preview, setPreview] = useState(null);
@@ -17,7 +26,8 @@ function Profile() {
     image: "",
     email: "",
     phone: "",
-    location: "",
+    latitude: "",
+    longitude: "",
   });
 
   async function getDataUpdate() {
@@ -29,7 +39,8 @@ function Profile() {
       image: responseProfile.data.data.image,
       email: responseProfile.data.data.email,
       phone: responseProfile.data.data.phone,
-      location: responseProfile.data.data.location,
+      latitude: responseProfile.data.data.latitude,
+      longitude: responseProfile.data.data.longitude,
     });
     setIsLoading(false);
   }
@@ -68,7 +79,10 @@ function Profile() {
       formData.set("fullname", form.fullname);
       formData.set("email", form.email);
       formData.set("phone", form.phone);
-      formData.set("location", form.location);
+      if (clickedPosition) {
+        formData.set("latitude", form.latitude);
+        formData.set("longitude", form.longitude);
+      }
 
       const response = await API.patch("/user", formData, config);
 
@@ -79,6 +93,29 @@ function Profile() {
       alert("Update User Failed");
     }
   });
+
+  const latitude = clickedPosition ? clickedPosition.lat : form?.latitude;
+  const longitude = clickedPosition ? clickedPosition.lng : form?.longitude;
+
+  useEffect(() => {
+    // Fetch the address from LocationIQ when form.latitude or form.longitude changes
+    if (latitude && longitude) {
+      const api_key = "pk.ec3ec8e73ea41ccefedfd001e1e1ddab";
+      const url = `https://us1.locationiq.com/v1/reverse.php?key=${api_key}&lat=${latitude}&lon=${longitude}&format=json`;
+
+      axios
+        .get(url)
+        .then((response) => {
+          const data = response.data;
+          const address = data.display_name || "Address not found";
+          setLocation(address);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [latitude, longitude]);
 
   return (
     <div>
@@ -138,15 +175,35 @@ function Profile() {
             <Form.Group as={Col} md={10}>
               <Form.Control
                 type="text"
-                value={form?.location}
-                onChange={handleChange}
-                name="location"
+                value={location}
                 placeholder="Location"
+                disabled
+              />
+              <Form.Control
+                type="text"
+                name="latitude"
+                disabled
+                hidden
+                onChange={handleChange}
+                value={clickedPosition ? clickedPosition.lat : form.latitude}
+              />
+              <Form.Control
+                type="text"
+                name="longitude"
+                disabled
+                hidden
+                onChange={handleChange}
+                value={clickedPosition ? clickedPosition.lng : form.longitude}
               />
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridPassword">
-              <Button variant="dark" type="submit" className="w-100" disabled>
+              <Button
+                variant="dark"
+                type="button"
+                className="w-100"
+                onClick={() => setShowMaps(true)}
+              >
                 Select On Map{" "}
                 <img src={Mapss} className="align-top" alt="Brand" />
               </Button>
@@ -158,6 +215,13 @@ function Profile() {
           </Button>
         </Form>
       </Container>
+
+      <ModalMaps
+        show={showMaps}
+        showMaps={setShowMaps}
+        clickedPosition={clickedPosition}
+        setClickedPosition={setClickedPosition}
+      />
     </div>
   );
 }

@@ -10,9 +10,11 @@ type CreateUserRequest struct {
 }
 
 type UpdateUserRequest struct {
-	FullName string `json:"fullname" form:"fullname"`
-	Email    string `json:"email" form:"email"`
-	Phone    string `json:"phone" form:"phone"`
-	Image    string `json:"image" form:"image"`
-	Location string `json:"location" form:"location"`
+	FullName  string `json:"fullname" form:"fullname"`
+	Email     string `json:"email" form:"email"`
+	Phone     string `json:"phone" form:"phone"`
+	Image     string `json:"image" form:"image"`
+	Location  string `json:"location" form:"location"`
+	Latitude  string `json:"latitude" form:"latitude"`
+	Longitude string `json:"longitude" form:"longitude"`
 }

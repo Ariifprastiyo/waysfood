@@ -1,68 +1,80 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import { useMap } from "react-leaflet";
 
-const LeafletRoutingMachine = () => {
+const LeafletRoutingMachine = ({ uLat, uLng, pLat, pLng }) => {
   const map = useMap();
+  const markerRef = useRef(null);
   const routingControlRef = useRef(null);
+  let DefaultIcon = L.icon({
+    iconUrl: "/marche.gif",
+    iconSize: [90, 90],
+  });
+  const markerIcon = new L.Icon({
+    iconUrl: "/marker-icon.png",
+    iconSize: [28, 40],
+    iconAnchor: [17, 46], //[left/right, top/bottom]
+    popupAnchor: [0, -46], //[left/right, top/bottom]
+  });
 
   useEffect(() => {
-    var marker1 = L.marker([-7.55194, 110.73778]).addTo(map);
-    const geocoder = L.Control.Geocoder.nominatim();
+    if (markerRef.current) {
+      markerRef.current.setLatLng([uLat, uLng]);
+    } else {
+      markerRef.current = L.marker([uLat, uLng], { icon: DefaultIcon }).addTo(
+        map
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uLat, uLng, map]);
 
-    const handleMapClick = function (e) {
-      console.log("ini apa", e);
+  useEffect(() => {
+    if (routingControlRef.current) {
+      map.removeControl(routingControlRef.current);
+    }
 
-      // Remove previous routing if it exists
-      if (routingControlRef.current) {
-        map.removeControl(routingControlRef.current);
-      }
+    L.marker([pLat, pLng], { icon: markerIcon }).addTo(map);
+    L.marker([uLat, uLng], { icon: markerIcon }).addTo(map);
 
-      routingControlRef.current = L.Routing.control({
-        waypoints: [
-          L.latLng(-7.55194, 110.73778),
-          L.latLng(e.latlng.lat, e.latlng.lng),
+    routingControlRef.current = L.Routing.control({
+      waypoints: [L.latLng(pLat, pLng), L.latLng(uLat, uLng)],
+      lineOptions: {
+        styles: [
+          {
+            color: "blue",
+            weight: 4,
+            opacity: 0.7,
+          },
         ],
-        lineOptions: {
-          styles: [
-            {
-              color: "blue",
-              weight: 4,
-              opacity: 0.7,
-            },
-          ],
-        },
-        routeWhileDragging: false,
-        geocoder: geocoder,
-        addWaypoints: false,
-        draggableWaypoints: false,
-        fitSelectedRoutes: true,
-        showAlternatives: false,
-      })
-        .on("routesfound", function (e) {
-          e.routes[0].coordinates.forEach((c, i) => {
-            setTimeout(() => {
-              marker1.setLatLng([c.lat, c.lng]);
-            }, 100 * i);
-          });
-        })
-        .addTo(map);
-    };
+      },
+      routeWhileDragging: false,
+      geocoder: L.Control.Geocoder.nominatim(),
+      addWaypoints: false,
+      draggableWaypoints: false,
+      fitSelectedRoutes: true,
+      showAlternatives: false,
+      createMarker: function () {
+        return null; // Return null to remove the default markers.
+      },
+    }).addTo(map);
 
-    map.on("click", handleMapClick);
+    routingControlRef.current.on("routesfound", function (e) {
+      e.routes[0].coordinates.forEach((c, i) => {
+        setTimeout(() => {
+          markerRef.current.setLatLng([c.lat, c.lng]);
+        }, 1000 * i);
+      });
+    });
 
     return () => {
-      // Clean up event listener when the component is unmounted
-      map.off("click", handleMapClick);
-
-      // Also, remove the routing control when unmounting
       if (routingControlRef.current) {
         map.removeControl(routingControlRef.current);
       }
     };
-  }, [map]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uLat, uLng, pLat, pLng, map]);
 
   return null;
 };

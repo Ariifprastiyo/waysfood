@@ -112,11 +112,12 @@ func (h *handler) UpdateUser(c echo.Context) error {
 	fmt.Println("This is data file", dataFile)
 
 	request := usersdto.UpdateUserRequest{
-		FullName: c.FormValue("fullname"),
-		Email:    c.FormValue("email"),
-		Phone:    c.FormValue("phone"),
-		Image:    dataFile,
-		Location: c.FormValue("location"),
+		FullName:  c.FormValue("fullname"),
+		Email:     c.FormValue("email"),
+		Phone:     c.FormValue("phone"),
+		Image:     dataFile,
+		Latitude:  c.FormValue("latitude"),
+		Longitude: c.FormValue("longitude"),
 	}
 
 	if request.FullName != "" {
@@ -135,8 +136,12 @@ func (h *handler) UpdateUser(c echo.Context) error {
 		user.Image = request.Image
 	}
 
-	if request.Location != "" {
-		user.Location = request.Location
+	if request.Latitude != "" {
+		user.Latitude = request.Latitude
+	}
+
+	if request.Longitude != "" {
+		user.Longitude = request.Longitude
 	}
 
 	data, err := h.UserRepository.UpdateUser(user)

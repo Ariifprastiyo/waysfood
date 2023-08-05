@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
+
 const LeafletGeocoder = () => {
   const map = useMap();
   useEffect(() => {
