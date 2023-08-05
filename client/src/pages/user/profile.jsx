@@ -10,11 +10,9 @@ import axios from "axios";
 
 function Profile() {
   const [showMaps, setShowMaps] = useState(false);
-  const [clickedPosition, setClickedPosition] = useState("");
+  const [clickedPosition, setClickedPosition] = useState(null);
   const [location, setLocation] = useState("");
 
-  console.log("postion", clickedPosition);
-  console.log("latitud", clickedPosition.lat);
 
   setAuthToken(localStorage.token);
   let navigate = useNavigate();
@@ -42,7 +40,6 @@ function Profile() {
       latitude: responseProfile.data.data.latitude,
       longitude: responseProfile.data.data.longitude,
     });
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -80,8 +77,8 @@ function Profile() {
       formData.set("email", form.email);
       formData.set("phone", form.phone);
       if (clickedPosition) {
-        formData.set("latitude", form.latitude);
-        formData.set("longitude", form.longitude);
+        formData.set("latitude", latitude);
+        formData.set("longitude", longitude);
       }
 
       const response = await API.patch("/user", formData, config);
@@ -121,7 +118,7 @@ function Profile() {
     <div>
       <Container>
         <h2 className="mt-5 fw-bold">Edit Profile</h2>
-        <Form className="my-5" onSubmit={(e) => handleSubmit.mutate(e)}>
+        <Form className="my-5" onSubmit={(e) => handleSubmit.mutate(e)} method="POST">
           <Row className="mb-3">
             <Form.Group as={Col} md={10}>
               <Form.Control

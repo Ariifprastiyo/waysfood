@@ -6,9 +6,15 @@ import { useMutation } from "react-query";
 import { API } from "../../config/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ModalMaps from "../../components/modalMaps";
+import axios from "axios";
 
 function ProfilePartner() {
   let navigate = useNavigate();
+
+  const [showMaps, setShowMaps] = useState(false);
+  const [clickedPosition, setClickedPosition] = useState(null);
+  const [location, setLocation] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
   const [preview, setPreview] = useState(null);
@@ -17,7 +23,8 @@ function ProfilePartner() {
     image: "",
     email: "",
     phone: "",
-    location: "",
+    latitude: "",
+    longitude: "",
   });
 
   async function getDataUpdate() {
@@ -29,9 +36,9 @@ function ProfilePartner() {
       image: responseProfile.data.data.image,
       email: responseProfile.data.data.email,
       phone: responseProfile.data.data.phone,
-      location: responseProfile.data.data.location,
+      latitude: responseProfile.data.data.latitude,
+      longitude: responseProfile.data.data.longitude,
     });
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -55,7 +62,6 @@ function ProfilePartner() {
     try {
       e.preventDefault();
 
-
       const formData = new FormData();
       if (form.image) {
         formData.set("image", form?.image[0], form?.image[0]?.name);
@@ -63,7 +69,10 @@ function ProfilePartner() {
       formData.set("fullname", form.fullname);
       formData.set("email", form.email);
       formData.set("phone", form.phone);
-      formData.set("location", form.location);
+      if (clickedPosition) {
+        formData.set("latitude", latitude);
+        formData.set("longitude", longitude);
+      }
 
       const response = await API.patch("/user", formData);
 
@@ -74,6 +83,29 @@ function ProfilePartner() {
       alert("Update Profile Partner Failed");
     }
   });
+
+  const latitude = clickedPosition ? clickedPosition.lat : form?.latitude;
+  const longitude = clickedPosition ? clickedPosition.lng : form?.longitude;
+
+  useEffect(() => {
+    // Fetch the address from LocationIQ when form.latitude or form.longitude changes
+    if (latitude && longitude) {
+      const api_key = "pk.ec3ec8e73ea41ccefedfd001e1e1ddab";
+      const url = `https://us1.locationiq.com/v1/reverse.php?key=${api_key}&lat=${latitude}&lon=${longitude}&format=json`;
+
+      axios
+        .get(url)
+        .then((response) => {
+          const data = response.data;
+          const address = data.display_name || "Address not found";
+          setLocation(address);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [latitude, longitude]);
 
   return (
     <div>
@@ -133,15 +165,33 @@ function ProfilePartner() {
             <Form.Group as={Col} md={10}>
               <Form.Control
                 type="text"
-                value={form?.location}
-                onChange={handleChange}
-                name="location"
+                value={location}
                 placeholder="Location"
+                disabled
+              />
+              <Form.Control
+                type="text"
+                name="latitude"
+                hidden
+                onChange={handleChange}
+                value={clickedPosition ? clickedPosition.lat : form.latitude}
+              />
+              <Form.Control
+                type="text"
+                name="longitude"
+                hidden
+                onChange={handleChange}
+                value={clickedPosition ? clickedPosition.lng : form.longitude}
               />
             </Form.Group>
 
             <Form.Group as={Col}>
-              <Button variant="dark" className="w-100" disabled>
+              <Button
+                variant="dark"
+                type="button"
+                className="w-100"
+                onClick={() => setShowMaps(true)}
+              >
                 Select On Map{" "}
                 <img src={Maps} className="align-top" alt="Brand" />
               </Button>
@@ -153,6 +203,13 @@ function ProfilePartner() {
           </Button>
         </Form>
       </Container>
+
+      <ModalMaps
+        show={showMaps}
+        showMaps={setShowMaps}
+        clickedPosition={clickedPosition}
+        setClickedPosition={setClickedPosition}
+      />
     </div>
   );
 }
