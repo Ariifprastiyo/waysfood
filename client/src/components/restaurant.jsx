@@ -46,7 +46,6 @@ function Restaurant() {
                 />
                 <Card.Body>
                   <Card.Title>{data.fullname}</Card.Title>
-                  <Card.Text>{data.location}</Card.Text>
                 </Card.Body>
               </Card>
             </Col>

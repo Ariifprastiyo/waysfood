@@ -12,10 +12,11 @@ import { API, setAuthToken } from "../../config/api";
 import ModalDelete from "../../components/modalDelete";
 import axios from "axios";
 import ModalRouting from "../../components/modalRouting";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Cart() {
   setAuthToken(localStorage.token);
+  let navigate = useNavigate();
   const [showMaps, setShowMaps] = useState(false);
   const [showRouting, setShowRouting] = useState(false);
   const [clickedPosition, setClickedPosition] = useState(null);

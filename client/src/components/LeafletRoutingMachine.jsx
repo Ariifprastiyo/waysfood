@@ -6,7 +6,6 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import { useMap } from "react-leaflet";
 
 const LeafletRoutingMachine = ({ uLat, uLng, pLat, pLng }) => {
-  console.log("ini peta ", pLat , pLng);
   const map = useMap();
   const markerRef = useRef(null);
   const routingControlRef = useRef(null);

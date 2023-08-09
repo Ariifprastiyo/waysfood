@@ -10,7 +10,7 @@ function Income() {
     console.log("ini trannnn", response);
     return response.data.data;
   });
-
+  
   return (
     <div>
       <Container>
@@ -20,7 +20,6 @@ function Income() {
             <tr>
               <th>No</th>
               <th>Name</th>
-              <th>Address</th>
               <th>Product Order</th>
               <th>Status</th>
             </tr>
@@ -30,8 +29,7 @@ function Income() {
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{data?.buyer.fullname}</td>
-                <td>{data?.buyer.location}</td>
-                <td>{data?.cart[0].product?.title}</td>
+                <td>{data?.cart[0]?.product?.title}</td>
                 <td className="p-0">
                   {data.status === "pending" && (
                     <div className="bg-warning text-center rounded mt-3 fw-bold">
