@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-routing-machine";
@@ -5,6 +6,7 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import { useMap } from "react-leaflet";
 
 const LeafletRoutingMachine = ({ uLat, uLng, pLat, pLng }) => {
+  console.log("ini peta ", pLat , pLng);
   const map = useMap();
   const markerRef = useRef(null);
   const routingControlRef = useRef(null);
@@ -23,9 +25,7 @@ const LeafletRoutingMachine = ({ uLat, uLng, pLat, pLng }) => {
     if (markerRef.current) {
       markerRef.current.setLatLng([uLat, uLng]);
     } else {
-      markerRef.current = L.marker([uLat, uLng], { icon: DefaultIcon }).addTo(
-        map
-      );
+      markerRef.current = L.marker([uLat, uLng], { icon: DefaultIcon }).addTo(map);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uLat, uLng, map]);

@@ -48,7 +48,7 @@ function ModalMaps({ show, showMaps, clickedPosition, setClickedPosition }) {
             clickedPosition={clickedPosition}
           />
         </MapContainer>
-        <Button onClick={handleLocateClick}>Locate Me</Button>
+        <Button onClick={handleLocateClick} variant="warning" className="mt-3 px-5 w-100">Locate Me</Button>
       </Modal.Body>
     </Modal>
   );

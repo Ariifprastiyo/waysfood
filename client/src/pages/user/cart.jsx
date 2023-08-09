@@ -8,17 +8,74 @@ import { useState } from "react";
 
 import { useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
-import { API } from "../../config/api";
+import { API, setAuthToken } from "../../config/api";
 import ModalDelete from "../../components/modalDelete";
+import axios from "axios";
+import ModalRouting from "../../components/modalRouting";
+import { useParams } from "react-router-dom";
 
 function Cart() {
+  setAuthToken(localStorage.token);
   const [showMaps, setShowMaps] = useState(false);
+  const [showRouting, setShowRouting] = useState(false);
+  const [clickedPosition, setClickedPosition] = useState(null);
+  const [location, setLocation] = useState("");
 
   const [idDelete, setIdDelete] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [form, setForm] = useState({
+    latitude: "",
+    longitude: "",
+  });
+
+  async function getDataUpdate() {
+    const responseProfile = await API.get("/profile");
+
+    setForm({
+      ...form,
+      latitude: responseProfile.data.data.latitude,
+      longitude: responseProfile.data.data.longitude,
+    });
+  }
+
+  const latitude = clickedPosition ? clickedPosition.lat : form?.latitude;
+  const longitude = clickedPosition ? clickedPosition.lng : form?.longitude;
+  
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  useEffect(() => {
+    getDataUpdate();
+  }, []);
+
+
+  useEffect(() => {
+    // Fetch the address from LocationIQ when form.latitude or form.longitude changes
+    if (latitude && longitude) {
+      const api_key = "pk.ec3ec8e73ea41ccefedfd001e1e1ddab";
+      const url = `https://us1.locationiq.com/v1/reverse.php?key=${api_key}&lat=${latitude}&lon=${longitude}&format=json`;
+
+      axios
+        .get(url)
+        .then((response) => {
+          const data = response.data;
+          const address = data.display_name || "Address not found";
+          setLocation(address);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [latitude, longitude]);
 
   const handleDelete = (id) => {
     setIdDelete(id);
@@ -44,7 +101,7 @@ function Cart() {
 
   let { data: cart, refetch } = useQuery("orderCache", async () => {
     const response = await API.get("/order-user");
-    console.log("ini respon transaction", response);
+    console.log("ini respon order", response);
     return response.data.data;
   });
 
@@ -98,6 +155,10 @@ function Cart() {
     };
   }, []);
 
+  const partnerLat = cart[0]?.partner?.latitude;
+  console.log("ini data lat partner", partnerLat)
+  const partnerLng = cart?.partner?.longitude;
+
   return (
     <div>
       <Container>
@@ -108,8 +169,25 @@ function Cart() {
             <Form.Group as={Col} md={9}>
               <Form.Control
                 type="text"
-                name="location"
+                value={location}
                 placeholder="Location"
+                disabled
+              />
+              <Form.Control
+                type="text"
+                name="latitude"
+                disabled
+                hidden
+                onChange={handleChange}
+                value={clickedPosition ? clickedPosition.lat : form.latitude || ""}
+              />
+              <Form.Control
+                type="text"
+                name="longitude"
+                disabled
+                hidden
+                onChange={handleChange}
+                value={clickedPosition ? clickedPosition.lng : form.longitude || ""}
               />
               <p className="mt-3">Review Your Order</p>
             </Form.Group>
@@ -119,7 +197,6 @@ function Cart() {
                 variant="dark"
                 className="w-100"
                 onClick={() => setShowMaps(true)}
-                disabled
               >
                 Select On Map{" "}
                 <img src={Maps} className="align-top" alt="Brand" />
@@ -131,10 +208,7 @@ function Cart() {
         <div className="d-flex justify-content-center">
           <div className="w-75">
             {cart?.map((data, index) => (
-              <Row
-                className=" border-top  border-dark py-3"
-                key={index}
-              >
+              <Row className=" border-top  border-dark py-3" key={index}>
                 <Col md={2} className="">
                   <img
                     src={data?.product.image}
@@ -208,7 +282,20 @@ function Cart() {
         </Button>
       </Container>
 
-      <ModalMaps show={showMaps} showMaps={setShowMaps} />
+      <ModalRouting
+        show={showRouting}
+        showRouting={setShowRouting}
+        uLat={latitude}
+        uLng={longitude}
+        pLat={partnerLat}
+        pLng={partnerLng}
+      />
+      <ModalMaps
+        show={showMaps}
+        showMaps={setShowMaps}
+        clickedPosition={clickedPosition}
+        setClickedPosition={setClickedPosition}
+      />
       <ModalDelete
         setConfirmDelete={setConfirmDelete}
         show={show}

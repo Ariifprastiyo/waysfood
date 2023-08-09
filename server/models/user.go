@@ -15,14 +15,14 @@ type User struct {
 }
 
 type UsersProfileResponse struct {
-	ID         int    `json:"id"`
-	FullName   string `json:"fullname"`
-	Email      string `json:"email"`
-	Phone      string `json:"phone"`
-	Image      string `json:"image"`
-	Location   string `json:"location"`
-	Latitude   string `json:"latitude"`
-	Longtitude string `json:"longtitude"`
+	ID        int    `json:"id"`
+	FullName  string `json:"fullname"`
+	Email     string `json:"email"`
+	Phone     string `json:"phone"`
+	Image     string `json:"image"`
+	Location  string `json:"location"`
+	Latitude  string `json:"latitude"`
+	Longitude string `json:"longitude"`
 }
 
 func (UsersProfileResponse) TableName() string {

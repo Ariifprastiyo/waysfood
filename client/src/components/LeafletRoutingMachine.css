@@ -1,0 +1,7 @@
+.leaflet-routing-instruction-icon,
+.leaflet-routing-instruction-text,
+.leaflet-routing-instruction-distance,
+.leaflet-routing-container tbody,
+.leaflet-routing-container tr, .leaflet-routing-alt h2 {
+  display: none !important;
+}
