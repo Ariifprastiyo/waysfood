@@ -44,7 +44,7 @@ function Cart() {
 
   const latitude = clickedPosition ? clickedPosition.lat : form?.latitude;
   const longitude = clickedPosition ? clickedPosition.lng : form?.longitude;
-  
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -55,7 +55,6 @@ function Cart() {
   useEffect(() => {
     getDataUpdate();
   }, []);
-
 
   useEffect(() => {
     // Fetch the address from LocationIQ when form.latitude or form.longitude changes
@@ -103,6 +102,20 @@ function Cart() {
     const response = await API.get("/order-user");
     console.log("ini respon order", response);
     return response.data.data;
+  });
+
+  let { data: lat } = useQuery("lat", async () => {
+    const response = await API.get("/order-user");
+    const partnerLat = response.data.data;
+    const current = Array.from(partnerLat);
+    return current.map((item) => item?.partner?.latitude);
+  });
+
+  let { data: lng } = useQuery("lng", async () => {
+    const response = await API.get("/order-user");
+    const partnerLng = response.data.data;
+    const current = Array.from(partnerLng);
+    return current.map((item) => item?.partner?.longitude);
   });
 
   const subTotal = cart?.reduce((acc, data) => acc + data?.product.price, 0);
@@ -155,10 +168,6 @@ function Cart() {
     };
   }, []);
 
-  const partnerLat = cart[0]?.partner?.latitude;
-  console.log("ini data lat partner", partnerLat)
-  const partnerLng = cart?.partner?.longitude;
-
   return (
     <div>
       <Container>
@@ -179,7 +188,9 @@ function Cart() {
                 disabled
                 hidden
                 onChange={handleChange}
-                value={clickedPosition ? clickedPosition.lat : form.latitude || ""}
+                value={
+                  clickedPosition ? clickedPosition.lat : form.latitude || ""
+                }
               />
               <Form.Control
                 type="text"
@@ -187,7 +198,9 @@ function Cart() {
                 disabled
                 hidden
                 onChange={handleChange}
-                value={clickedPosition ? clickedPosition.lng : form.longitude || ""}
+                value={
+                  clickedPosition ? clickedPosition.lng : form.longitude || ""
+                }
               />
               <p className="mt-3">Review Your Order</p>
             </Form.Group>
@@ -196,10 +209,9 @@ function Cart() {
               <Button
                 variant="dark"
                 className="w-100"
-                onClick={() => setShowMaps(true)}
+                onClick={() => setShowRouting(true)}
               >
-                Select On Map{" "}
-                <img src={Maps} className="align-top" alt="Brand" />
+                See How Far?
               </Button>
             </Form.Group>
           </Row>
@@ -287,8 +299,8 @@ function Cart() {
         showRouting={setShowRouting}
         uLat={latitude}
         uLng={longitude}
-        pLat={partnerLat}
-        pLng={partnerLng}
+        pLat={lat?.[0]}
+        pLng={lng?.[0]}
       />
       <ModalMaps
         show={showMaps}
