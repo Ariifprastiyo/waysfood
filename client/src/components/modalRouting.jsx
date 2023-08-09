@@ -26,7 +26,8 @@ const ModalRouting = ({ show, showRouting, uLat, uLng, pLat, pLng }) => {
       <ModalBody>
         <MapContainer
           center={[-6.42806409558657, 106.75406445110613]}
-          zoom={10}
+          zoom={13}
+          style={{ width: "80vw", height: "80vh", margin: "0 auto" }}
           ref={mapRef} // Assign the map reference
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

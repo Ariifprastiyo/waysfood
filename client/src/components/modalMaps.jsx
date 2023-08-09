@@ -31,14 +31,19 @@ function ModalMaps({ show, showMaps, clickedPosition, setClickedPosition }) {
     // Do something with the position if needed
     if (setClickedPosition) {
       setClickedPosition(position);
-
     }
   };
-  
+
   return (
     <Modal size="xl" show={show} onHide={handleClose}>
       <Modal.Body>
-        <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true} ref={mapRef}>
+        <MapContainer
+          center={[51.505, -0.09]}
+          style={{ width: "80vw", height: "80vh", margin: "0 auto" }}
+          zoom={13}
+          scrollWheelZoom={true}
+          ref={mapRef}
+        >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -48,7 +53,13 @@ function ModalMaps({ show, showMaps, clickedPosition, setClickedPosition }) {
             clickedPosition={clickedPosition}
           />
         </MapContainer>
-        <Button onClick={handleLocateClick} variant="warning" className="mt-3 px-5 w-100">Locate Me</Button>
+        <Button
+          onClick={handleLocateClick}
+          variant="warning"
+          className="mt-3 px-5 w-100"
+        >
+          Locate Me
+        </Button>
       </Modal.Body>
     </Modal>
   );
@@ -80,7 +91,7 @@ function LocationMarker({ onLocate, clickedPosition }) {
     setPosition(e.target.getLatLng());
   };
 
-  console.log("ini position ", position)
+  console.log("ini position ", position);
 
   const markerIcon = new L.Icon({
     iconUrl: "/marker-icon.png",
@@ -88,8 +99,6 @@ function LocationMarker({ onLocate, clickedPosition }) {
     iconAnchor: [17, 46], //[left/right, top/bottom]
     popupAnchor: [0, -46], //[left/right, top/bottom]
   });
-
-
 
   return position === null ? null : (
     <Marker
