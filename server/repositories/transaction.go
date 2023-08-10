@@ -61,6 +61,10 @@ func (r *repository) UpdateTransaction(status string, orderId int) (models.Trans
 	var transaction models.Transaction
 	r.db.Preload("Buyer").First(&transaction, orderId)
 
+	if status != transaction.Status && status == "success" {
+		r.db.First(&transaction, orderId)
+	}
+
 	transaction.Status = status
 	err := r.db.Save(&transaction).Error
 	return transaction, err
