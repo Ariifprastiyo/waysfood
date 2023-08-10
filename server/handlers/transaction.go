@@ -149,7 +149,7 @@ func (h *handlerTransaction) Notification(c echo.Context) error {
 
 func SendMail(status string, transaction models.Transaction) {
 
-	if status != transaction.Status && (status == "Success") {
+	if status != transaction.Status && (status == "success") {
 		var CONFIG_SMTP_HOST = "smtp.gmail.com"
 		var CONFIG_SMTP_PORT = 587
 		var CONFIG_SENDER_NAME = "DumbMerch <demo.dumbways@gmail.com>"
