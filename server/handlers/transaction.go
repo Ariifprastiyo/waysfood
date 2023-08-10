@@ -130,11 +130,11 @@ func (h *handlerTransaction) Notification(c echo.Context) error {
 		if fraudStatus == "challenge" {
 			h.TransactionRepository.UpdateTransaction("pending", order_id)
 		} else if fraudStatus == "accept" {
-			SendMail("success", transaction)
+			SendMail("Success", transaction)
 			h.TransactionRepository.UpdateTransaction("success", order_id)
 		}
 	} else if transactionStatus == "settlement" {
-		SendMail("success", transaction)
+		SendMail("Success", transaction)
 		h.TransactionRepository.UpdateTransaction("success", order_id)
 	} else if transactionStatus == "deny" {
 		h.TransactionRepository.UpdateTransaction("failed", order_id)
