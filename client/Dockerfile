@@ -1,20 +1,20 @@
-# Set the base image to Node 16 (distroless)
-FROM node:latest
+# Menggunakan node image sebagai base image
+FROM node:16
 
-# Set the working directory inside the container
+# Menentukan direktori kerja di dalam container
 WORKDIR /app
 
-# Copy package.json and package-lock.json files to the working directory in the container
+# Menyalin package.json dan package-lock.json ke dalam direktori kerja
 COPY package*.json ./
 
-# Install dependencies
+# Menginstall dependensi proyek
 RUN npm install
 
-# Copy the rest of the project files
+# Menyalin seluruh konten proyek ke dalam direktori kerja di dalam container
 COPY . .
 
-# Expose the port that the Vite development server will listen on
+# Port yang digunakan oleh proyek (sesuai dengan konfigurasi Vite)
 EXPOSE 5173
 
-# Start the Vite development server
-CMD ["npm", "run", "host", "--", "--host", "0.0.0.0"]
+# Menjalankan perintah untuk menjalankan aplikasi
+CMD ["npm", "run", "dev"]
