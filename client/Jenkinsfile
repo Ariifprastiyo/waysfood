@@ -2,8 +2,8 @@ def branch = "production"
 def repo = "git@github.com:Ariifprastiyo/waysfood.git"
 def cred = "ssh"
 def dir = "~/waysfood/client/"
-def server = ""
-def imagename = "waysfood-fe"
+def server = "ariif_prastiyo@34.125.78.97"
+def imagename = "Fe-Waysfood-Production"
 def dockerusername = "ariif"
 
 pipeline {
